@@ -84,19 +84,17 @@ export default function Home() {
         </div>
 
         <div className={styles.cardgrid}>
-          {shaffledcards
-            ?.filter((x) => x.matched === false)
-            .map((i) => {
-              return (
-                <Card
-                  key={i.id}
-                  card={i}
-                  handleChoice={handleChoice}
-                  flipped={i === choiceone || i === choicetwo || i.matched}
-                  disabled={disabled}
-                />
-              );
-            })}
+          {shaffledcards?.map((i) => {
+            return (
+              <Card
+                key={i.id}
+                card={i}
+                handleChoice={handleChoice}
+                flipped={i === choiceone || i === choicetwo || i.matched}
+                disabled={disabled}
+              />
+            );
+          })}
         </div>
       </main>
     </div>
