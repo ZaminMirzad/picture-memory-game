@@ -1,0 +1,60 @@
+.card {
+  position: relative;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+  border: 2px solid #000;
+  border-radius: 6px;
+  height: 120px;
+}
+
+.card .front {
+  transform: rotateY(90deg);
+  transition: all ease-in 0.2s;
+  position: absolut;
+}
+
+.flipped .front {
+  transform: rotateX(0deg);
+  transition-delay: 0.2s;
+}
+
+.card .back {
+  transition: all ease-in 0.2s;
+  transition-delay: 0.2s;
+}
+
+.flipped .back {
+  transform: rotateY(90deg);
+  transition-delay: 0s;
+}
+
+.back {
+  background-color: gray;
+  height: 120px;
+  width: 110px;
+  display: block;
+  cursor: pointer;
+}
+.front {
+  transform: rotateY(90deg);
+  position: absolute;
+}
+.front {
+  transform: rotateY(0deg);
+}
+button {
+  padding: 5px 10px;
+  margin: 0 10px;
+  background-color: rgb(202, 158, 243);
+  border-radius: 6px;
+  border: 1px solid rgb(202, 158, 243);
+  font-size: 20px;
+  cursor: pointer;
+  color: rgb(44, 44, 44);
+}
+button:hover {
+  background-color: rgb(175, 120, 226);
+}

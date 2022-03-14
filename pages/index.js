@@ -1,8 +1,72 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import axios from "axios";
+import Head from "next/head";
+
+import { useState, useEffect } from "react";
+import styles from "../styles/Home.module.css";
+
+import Card from "../components/Card";
 
 export default function Home() {
+  const [images, setImages] = useState([]);
+  const [shaffledcards, setShaffledcards] = useState([]);
+  const [turns, setTurns] = useState(0);
+
+  const [choiceone, setChoiceone] = useState(null);
+  const [choicetwo, setChoicetwo] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+  const [score, setScore] = useState(0);
+
+  console.log(shaffledcards, turns);
+  const shaffle = () => {
+    const shaffledimages = [...images, ...images]
+      .sort(() => Math.random() - 0.5)
+      .map((card) => ({ ...card, id: Math.random(), matched: false }));
+
+    setShaffledcards(shaffledimages);
+    setTurns(0);
+  };
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      axios
+        .get("https://picsum.photos/v2/list?&limit=8")
+        .then((res) => setImages(res.data));
+    };
+    fetchImage();
+  }, []);
+
+  // handle choice
+  const handleChoice = (card) => {
+    choiceone ? setChoicetwo(card) : setChoiceone(card);
+  };
+
+  // handle reset
+  const resethandle = () => {
+    setChoiceone(null);
+    setChoicetwo(null);
+    setTurns((prev) => prev + 1);
+    setDisabled(false);
+  };
+  // handle matching
+  useEffect(() => {
+    if (choiceone && choicetwo) {
+      setDisabled(true);
+      if (choiceone.download_url === choicetwo.download_url) {
+        setShaffledcards((prevcards) => {
+          return prevcards.map((card) => {
+            if (card.download_url === choiceone.download_url) {
+              return { ...card, matched: true };
+            } else {
+              return card;
+            }
+          });
+        });
+        resethandle();
+      } else {
+        setTimeout(() => resethandle(), 500);
+      }
+    }
+  }, [choiceone, choicetwo]);
   return (
     <div className={styles.container}>
       <Head>
@@ -12,58 +76,29 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <div>
+          <h1>Welcome to Picture Memory Game</h1>
+          <button onClick={shaffle}>New Game</button>
+          Moves: {turns}
+          {/* &nbsp;&nbsp; Score: {score} */}
+        </div>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className={styles.cardgrid}>
+          {shaffledcards
+            ?.filter((x) => x.matched === false)
+            .map((i) => {
+              return (
+                <Card
+                  key={i.id}
+                  card={i}
+                  handleChoice={handleChoice}
+                  flipped={i === choiceone || i === choicetwo || i.matched}
+                  disabled={disabled}
+                />
+              );
+            })}
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
-  )
+  );
 }
