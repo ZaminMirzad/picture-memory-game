@@ -1,5 +1,6 @@
 # Picture Memory Game
 # [Live Demo](https://picflip.netlify.app)
+![image](https://user-images.githubusercontent.com/91832381/185762703-54756c14-9bbd-4b76-9057-cd2c5931bee6.png)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -12,6 +13,7 @@ npm run dev
 # or
 yarn dev
 ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
